@@ -1,6 +1,7 @@
 <?php
 //conectando com o banco de dados
-@require_once("connection-db.php");
+
+@require_once('connection-db.php');
 
 
 // verificando envio 
@@ -13,9 +14,10 @@ if(isset($_POST['botao-singup'])):
             //cirando usario na tabela 
             function criandoUsuario($nome,$email,$senha) {
   
-                global $sql_inserindo, $resultado; 
-                $sql_inserindo = "INSERT INTO users(name, email, password) VALUES('$nome', '$email', '$senha')";//.md5($senha)
-                $resultado = mysqli_query($GLOBALS['connect'], $sql_inserindo);
+                global $sql, $resultado; 
+                $sql = "INSERT INTO users(name, email, password) VALUES('$nome', '$email', '$senha')";//.md5($senha)
+                $resultado = mysqli_query($GLOBALS['connect'], $sql);
+
   
          
             };// funciton
@@ -26,17 +28,23 @@ if(isset($_POST['botao-singup'])):
             $consulta = "SELECT email FROM users WHERE email = '$email'"; // selecionando dados da tabela users
             $resultado = mysqli_query($connect,$consulta);
             // $resultado = mysqli_num_rows($resultado);
-            $resultado = mysqli_num_rows($resultado);   
+            $resultadoEncontrado = mysqli_num_rows($resultado);   
 
 
-            if( $resultado == false):
+            if($resultadoEncontrado == false):
 
-                criandoUsuario($nome,$email,$senha);
+                criandoUsuario($nome,$email,$senha);                
+                $sql = "SELECT name FROM users WHERE email = '$email'";
+                $resultado = mysqli_query($GLOBALS['connect'],$sql);
+                $dados = mysqli_fetch_array($resultado, MYSQLI_ASSOC);
+                $_SESSION['logado'] = true;
+                $_SESSION['nome_usuario'] = $dados['name'];
+                mysqli_close($connect);
                 echo "<p>cad ok</p>";
-
-                // header('location: /sistema-de-login/login/home.html'); // acessanod pagina principal apos o cadastro
-                // mysqli_close($connect);
-            elseif($consulta == true):
+                
+                header('location: /sistema-de-login/login/home.php'); // acessanod pagina principal apos o cadastro
+                
+            elseif($resultadoEncontrado == true):
 
                 echo "<p>conta ja cadastrado, logue com seu email</p>";
                 mysqli_close($connect); 

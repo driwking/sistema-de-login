@@ -1,15 +1,17 @@
 <?php
 
+session_start();
 @require_once('connection-db.php');
+
 
 if(isset($_POST['botaosingin'])):
     if(!empty($_POST['email']) && !empty($_POST['senha'])):
         echo "<p>tudo certo</p>";
         function consulta($consulta) {
 
-            global $resultado;
+            global $resultado, $resultadoEncontrado;
             $resultado = mysqli_query($GLOBALS['connect'],$consulta); 
-            $resultado = mysqli_num_rows($resultado);
+            $resultadoEncontrado = mysqli_num_rows($resultado);
 
         }
 
@@ -20,16 +22,22 @@ if(isset($_POST['botaosingin'])):
 
 
         
-        if($resultado == true):
+        if($resultadoEncontrado == true):
             
             $consultaValor = "SELECT * FROM users WHERE email = '$email' AND password ='$senha'";
             consulta($consultaValor);
 
-            if($resultado == true) {
+            if($resultadoEncontrado == true) {
                 echo "entrou";
-                header('location: /sistema-de-login/login/home.html');
-                mysqli_close($connect);
-            }elseif($resultado == false) {
+                $dados =  mysqli_fetch_array($resultado, MYSQLI_ASSOC);
+                mysqli_close($connect); // fechan a conexao sempre apos a conulta por medidas de segurança. Nao vai interferir, apenas fechar a conexao em aberto
+                print_r($dados); // convertendo a query no banco de dados em um array na var $dados
+                $_SESSION['logado'] = true; // dizendo que o usuario esta logado no sistema
+                $_SESSION['nome_usuario'] = $dados['name']; // atribuindo o id do usuario a uma sessao id
+                header('location: /sistema-de-login/login/home.php');   
+                
+                
+            }elseif($resultadoEncontrado == false) {
                 echo "login ou senha invalida";
             };
 

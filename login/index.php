@@ -1,3 +1,10 @@
+<?php
+
+require_once('C:\wamp64\www\sistema-de-login\php\login.php');
+require_once('C:\wamp64\www\sistema-de-login\php\main.php');
+
+?>
+
 <!DOCTYPE html>
 
 <html lang="pt-br">
@@ -45,7 +52,7 @@
                     </div>
 
                     <p class="description description-second">ou use seu email para registrar</p>
-                    <form class="forms forms-register" action="/sistema-de-login/php/main.php" method="POST">
+                    <form class="forms forms-register" action="" method="POST">
                         <label class="label-input" for=" ">
                             <i class="fa-solid fa-user icon-modify"></i>
                         <input type="text" name="nome" placeholder="Nome">
@@ -105,7 +112,7 @@
 
                     <p class="description description-second">ou use seu email para entrar</p>
 
-                    <form class="forms forms-login" action="/sistema-de-login/php/login.php" method="POST">
+                    <form class="forms forms-login" action="" method="POST">
 
                         <label class="label-input" for=" ">
                         <i class="fa-solid fa-envelope icon-modify"></i>
